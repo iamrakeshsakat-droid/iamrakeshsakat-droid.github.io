@@ -1179,35 +1179,61 @@ footer {
     <div class="section-eyebrow sr" style="justify-content:center;color:#6FCBA8">Join the Waitlist</div>
     <h2 class="section-title sr d1" style="color:#FFFFFF">Be the first to protect<br><em style="color:#A8E6C8">your family.</em></h2>
     <p class="section-sub sr d2" style="margin:0 auto 44px;max-width:none;color:rgba(255,255,255,0.6)">Join the waitlist — and be notified the moment Mokssh is live in your city.</p>
-    <div class="wform sr d3" id="wForm">
+    
+    <form class="wform sr d3" id="wForm" action="https://formspree.io/f/mgodlrny" method="POST">
       <div class="wrow">
-        <input class="winput" type="text" placeholder="Your full name" id="wN">
-        <input class="winput" type="tel" placeholder="Mobile number" id="wP">
+        <input class="winput" type="text" name="Name" placeholder="Your full name" id="wN" required>
+        <input class="winput" type="tel" name="Mobile" placeholder="Mobile number" id="wP" required>
       </div>
-      <input class="winput" type="email" placeholder="Email address" id="wE">
+      <input class="winput" type="email" name="Email" placeholder="Email address" id="wE" required>
       <div class="wrow">
-        <select class="winput" id="wC">
+        <select class="winput" name="City" id="wC" required>
           <option value="" disabled selected>Select your city</option>
           <option>Mumbai</option><option>Delhi</option><option>Bengaluru</option>
           <option>Pune</option><option>Chennai</option><option>Hyderabad</option>
           <option>Kolkata</option><option>Ahmedabad</option><option>Jaipur</option><option>Other</option>
         </select>
-        <select class="winput" id="wT">
+        <select class="winput" name="User_Type" id="wT" required>
           <option value="" disabled selected>I am a...</option>
           <option>Individual / Family</option><option>Defence Personnel</option>
           <option>Employer / HR</option><option>Insurance Agent</option><option>Investor</option>
         </select>
       </div>
-      <button class="wsubmit" onclick="joinList()">Join the Waitlist — It's Free</button>
+      <button type="submit" class="wsubmit">Join the Waitlist — It's Free</button>
       <p class="wnote">No spam. One email when Mokssh launches in your city.</p>
-    </div>
-    <div class="wok" id="wOK">
+    </form>
+
+    <div class="wok" id="wOK" style="display:none;">
       <div class="wok-icon">✅</div>
       <h3>You're on the list.</h3>
       <p>We'll reach out the moment Mokssh is available in your city.<br>Thank you for believing in what we're building.</p>
     </div>
   </div>
 </section>
+
+<script>
+  // Script to handle Formspree submission without refreshing the page
+  const form = document.getElementById("wForm");
+  const successMsg = document.getElementById("wOK");
+
+  form.addEventListener("submit", async function(event) {
+    event.preventDefault(); // Stop the page from redirecting
+    const data = new FormData(event.target);
+    
+    const response = await fetch(event.target.action, {
+      method: form.method,
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (response.ok) {
+      form.style.display = "none"; // Hide the form
+      successMsg.style.display = "block"; // Show your custom success message
+    } else {
+      alert("Oops! There was a problem submitting your form. Please try again.");
+    }
+  });
+</script>
 
 <!-- ═══ CONTACT ══════════════════════════════════════════════════════ -->
 <section id="contact">
