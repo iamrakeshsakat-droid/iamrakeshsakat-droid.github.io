@@ -1174,36 +1174,36 @@ footer {
 </section>
 
 <!-- ═══ WAITLIST ═════════════════════════════════════════════════════ -->
-<section id="waitlist">
-  <div class="waitlist-inner">
-    <div class="section-eyebrow sr" style="justify-content:center;color:#6FCBA8">Join the Waitlist</div>
-    <h2 class="section-title sr d1" style="color:#FFFFFF">Be the first to protect<br><em style="color:#A8E6C8">your family.</em></h2>
+<section id="waitlist" style="padding: 100px 20px; background: #0a0a0a;">
+  <div class="waitlist-inner" style="max-width: 800px; margin: 0 auto; text-align: center;">
+    <div class="section-eyebrow sr" style="justify-content:center;color:#6FCBA8; margin-bottom: 20px;">Join the Waitlist</div>
+    <h2 class="section-title sr d1" style="color:#FFFFFF; margin-bottom: 20px;">Be the first to protect<br><em style="color:#A8E6C8">your family.</em></h2>
     <p class="section-sub sr d2" style="margin:0 auto 44px;max-width:none;color:rgba(255,255,255,0.6)">Join the waitlist — and be notified the moment Mokssh is live in your city.</p>
     
     <form class="wform sr d3" id="wForm" action="https://formspree.io/f/xvzlbjzk" method="POST">
-      <div class="wrow">
-        <input class="winput" type="text" name="Name" placeholder="Your full name" id="wN" required>
-        <input class="winput" type="tel" name="Mobile" placeholder="Mobile number" id="wP" required>
+      <div class="wrow" style="display: flex; gap: 15px; margin-bottom: 15px;">
+        <input class="winput" type="text" name="Name" placeholder="Your full name" id="wN" required style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff;">
+        <input class="winput" type="tel" name="Mobile" placeholder="Mobile number" id="wP" required style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff;">
       </div>
-      <input class="winput" type="email" name="Email" placeholder="Email address" id="wE" required>
-      <div class="wrow">
-        <select class="winput" name="City" id="wC" required>
+      <input class="winput" type="email" name="Email" placeholder="Email address" id="wE" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff; margin-bottom: 15px;">
+      <div class="wrow" style="display: flex; gap: 15px; margin-bottom: 20px;">
+        <select class="winput" name="City" id="wC" required style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff;">
           <option value="" disabled selected>Select your city</option>
           <option>Mumbai</option><option>Delhi</option><option>Bengaluru</option>
           <option>Pune</option><option>Chennai</option><option>Hyderabad</option>
           <option>Kolkata</option><option>Ahmedabad</option><option>Jaipur</option><option>Other</option>
         </select>
-        <select class="winput" name="User_Type" id="wT" required>
+        <select class="winput" name="User_Type" id="wT" required style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff;">
           <option value="" disabled selected>I am a...</option>
           <option>Individual / Family</option><option>Defence Personnel</option>
           <option>Employer / HR</option><option>Insurance Agent</option><option>Investor</option>
         </select>
       </div>
-      <button type="submit" class="wsubmit" id="wSubmitBtn">Join the Waitlist — It's Free</button>
-      <p class="wnote">No spam. One email when Mokssh launches in your city.</p>
+      <button type="submit" class="wsubmit" id="wSubmitBtn" style="width: 100%; padding: 15px; background: #6FCBA8; color: #000; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Join the Waitlist — It's Free</button>
+      <p class="wnote" style="font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 15px;">No spam. One email when Mokssh launches in your city.</p>
     </form>
 
-    <div class="wok" id="wOK" style="display:none; text-align:center; padding: 40px 0;">
+    <div class="wok" id="wOK" style="display:none; padding: 40px 0;">
       <div class="wok-icon" style="font-size: 48px; margin-bottom: 20px;">✅</div>
       <h3 style="color: #fff; margin-bottom: 10px;">You're on the list.</h3>
       <p style="color: rgba(255,255,255,0.7);">We'll reach out the moment Mokssh is available in your city.<br>Thank you for believing in what we're building.</p>
@@ -1212,48 +1212,47 @@ footer {
 </section>
 
 <script>
-  async function handleSubmit(event) {
-    event.preventDefault();
-    const form = event.target;
-    const button = document.getElementById("wSubmitBtn");
-    const status = document.getElementById("wOK");
-    
-    button.innerText = "Processing...";
-    button.style.opacity = "0.7";
-    button.disabled = true;
+  (function() {
+    const form = document.getElementById("wForm");
+    if (!form) return;
 
-    const data = new FormData(event.target);
-    
-    try {
-      const response = await fetch("https://formspree.io/f/xvzlbjzk", {
-        method: "POST",
-        body: data,
-        headers: { 'Accept': 'application/json' }
-      });
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+      const button = document.getElementById("wSubmitBtn");
+      const status = document.getElementById("wOK");
+      
+      // UI State: Loading
+      const originalText = button.innerText;
+      button.innerText = "Processing...";
+      button.disabled = true;
 
-      if (response.ok) {
-        form.reset(); 
-        form.style.display = "none";
-        status.style.display = "block";
-        status.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        const result = await response.json();
-        alert(result.error || "Submission failed. Please check your Formspree activation.");
-        resetBtn();
+      const data = new FormData(event.target);
+      
+      try {
+        const response = await fetch("https://formspree.io/f/xvzlbjzk", {
+          method: "POST",
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.ok) {
+          form.reset(); 
+          form.style.display = "none";
+          status.style.display = "block";
+          status.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          const result = await response.json();
+          alert(result.error || "Submission failed. Check Formspree activation.");
+          button.innerText = originalText;
+          button.disabled = false;
+        }
+      } catch (error) {
+        alert("Connection error. Please try again.");
+        button.innerText = originalText;
+        button.disabled = false;
       }
-    } catch (error) {
-      alert("Connection error. Please check your internet.");
-      resetBtn();
-    }
-
-    function resetBtn() {
-      button.innerText = "Join the Waitlist — It's Free";
-      button.disabled = false;
-      button.style.opacity = "1";
-    }
-  }
-
-  document.getElementById("wForm").addEventListener("submit", handleSubmit);
+    });
+  })();
 </script>
 
 <!-- ═══ CONTACT ══════════════════════════════════════════════════════ -->
