@@ -1199,40 +1199,64 @@ footer {
           <option>Employer / HR</option><option>Insurance Agent</option><option>Investor</option>
         </select>
       </div>
-      <button type="submit" class="wsubmit">Join the Waitlist — It's Free</button>
+      <button type="submit" class="wsubmit" id="wSubmitBtn">Join the Waitlist — It's Free</button>
       <p class="wnote">No spam. One email when Mokssh launches in your city.</p>
     </form>
 
-    <div class="wok" id="wOK" style="display:none;">
-      <div class="wok-icon">✅</div>
-      <h3>You're on the list.</h3>
-      <p>We'll reach out the moment Mokssh is available in your city.<br>Thank you for believing in what we're building.</p>
+    <div class="wok" id="wOK" style="display:none; text-align:center; padding: 40px 0;">
+      <div class="wok-icon" style="font-size: 48px; margin-bottom: 20px;">✅</div>
+      <h3 style="color: #fff; margin-bottom: 10px;">You're on the list.</h3>
+      <p style="color: rgba(255,255,255,0.7);">We'll reach out the moment Mokssh is available in your city.<br>Thank you for believing in what we're building.</p>
     </div>
   </div>
 </section>
 
 <script>
-  // Script to handle Formspree submission without refreshing the page
-  const form = document.getElementById("wForm");
-  const successMsg = document.getElementById("wOK");
+  async function handleSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const button = document.getElementById("wSubmitBtn");
+    const status = document.getElementById("wOK");
+    
+    // UI Feedback
+    button.innerText = "Processing...";
+    button.style.opacity = "0.7";
+    button.disabled = true;
 
-  form.addEventListener("submit", async function(event) {
-    event.preventDefault(); // Stop the page from redirecting
     const data = new FormData(event.target);
     
-    const response = await fetch(event.target.action, {
+    fetch(event.target.action, {
       method: form.method,
       body: data,
-      headers: { 'Accept': 'application/json' }
+      headers: {
+          'Accept': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        form.style.display = "none";
+        status.style.display = "block";
+        status.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        response.json().then(data => {
+          if (Object.hasOwn(data, 'errors')) {
+            alert(data["errors"].map(error => error["message"]).join(", "));
+          } else {
+            alert("Oops! There was a problem. Please ensure your Formspree form is 'Active'.");
+          }
+          button.innerText = "Join the Waitlist — It's Free";
+          button.disabled = false;
+          button.style.opacity = "1";
+        })
+      }
+    }).catch(error => {
+      alert("Oops! Connection error. Please try again later.");
+      button.innerText = "Join the Waitlist — It's Free";
+      button.disabled = false;
+      button.style.opacity = "1";
     });
-
-    if (response.ok) {
-      form.style.display = "none"; // Hide the form
-      successMsg.style.display = "block"; // Show your custom success message
-    } else {
-      alert("Oops! There was a problem submitting your form. Please try again.");
-    }
-  });
+  }
+  
+  document.getElementById("wForm").addEventListener("submit", handleSubmit);
 </script>
 
 <!-- ═══ CONTACT ══════════════════════════════════════════════════════ -->
