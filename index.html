@@ -1188,7 +1188,8 @@ footer {
 
     const data = new FormData(event.target);
     
-    fetch(event.target.action, {
+    // Using the updated endpoint: xvzlbjzk
+    fetch("https://formspree.io/f/xvzlbjzk", {
       method: "POST",
       body: data,
       headers: {
